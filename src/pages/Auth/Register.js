@@ -3,6 +3,7 @@ import logo from "../../assets/logo1.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ErrorAlert } from "../../components/ErrorAlert";
+import { ActivityIcon, Loader } from "lucide-react";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -122,7 +123,7 @@ if (validateForm()) {
 
           {error && (
            <ErrorAlert
-          message={formErrors}
+          message={error}
         /> 
           )}
 
@@ -178,7 +179,7 @@ if (validateForm()) {
               Phone Number
             </label>
             <input
-              type="number"
+              type="tel"
               name="mobile"
               value={mobile}
               onChange={(e) => setMobile(e.target.value)}
@@ -220,9 +221,10 @@ if (validateForm()) {
 
           <button
             type="submit"
-            className="w-full mt-4 bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 transition duration-200"
+            disabled={loading}
+            className="w-full mt-4 bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 transition duration-200 disabled:opacity-55 flex justify-center items-center gap-2"
           >
-            Register
+            Register{loading ? <Loader/>: ""}
           </button>
         </form>
 

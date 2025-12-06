@@ -14,7 +14,7 @@ export default function CustomerManagement() {
       joinDate: '2024-01-15',
       complaints: 1,
       rating: 4.8,
-      totalSpent: '$1,234',
+      totalSpent: 'Birr 234',
       lastOrder: '2024-03-10',
     },
     {
@@ -27,7 +27,7 @@ export default function CustomerManagement() {
       joinDate: '2023-11-22',
       complaints: 0,
       rating: 5.0,
-      totalSpent: '$2,890',
+      totalSpent: 'Birr 890',
       lastOrder: '2024-03-12',
     },
     {
@@ -40,7 +40,7 @@ export default function CustomerManagement() {
       joinDate: '2024-02-08',
       complaints: 2,
       rating: 4.2,
-      totalSpent: '$678',
+      totalSpent: 'Birr ',
       lastOrder: '2024-03-05',
     },
     {
@@ -53,7 +53,7 @@ export default function CustomerManagement() {
       joinDate: '2023-08-12',
       complaints: 0,
       rating: 4.9,
-      totalSpent: '$4,230',
+      totalSpent: 'Birr 230',
       lastOrder: '2024-03-11',
     },
   ];

@@ -11,7 +11,7 @@ export default function ServicesAndPricing() {
       name: 'Wash & Fold',
       description: 'Standard washing and folding service',
       subcategories: ['Casual Wear', 'Formal Wear', 'Bedding'],
-      basePrice: '$12.00',
+      basePrice: 'Birr .00',
       status: 'Active',
       orders: 245,
     },
@@ -20,7 +20,7 @@ export default function ServicesAndPricing() {
       name: 'Dry Cleaning',
       description: 'Professional dry cleaning for delicate items',
       subcategories: ['Suits', 'Dresses', 'Coats', 'Curtains'],
-      basePrice: '$25.00',
+      basePrice: 'Birr .00',
       status: 'Active',
       orders: 189,
     },
@@ -29,7 +29,7 @@ export default function ServicesAndPricing() {
       name: 'Ironing',
       description: 'Professional pressing and ironing',
       subcategories: ['Shirts', 'Pants', 'Formal Wear'],
-      basePrice: '$8.00',
+      basePrice: 'Birr .00',
       status: 'Active',
       orders: 156,
     },
@@ -38,7 +38,7 @@ export default function ServicesAndPricing() {
       name: 'Premium Care',
       description: 'Specialized care for luxury items',
       subcategories: ['Designer Wear', 'Leather', 'Fur'],
-      basePrice: '$45.00',
+      basePrice: 'Birr .00',
       status: 'Active',
       orders: 78,
     },
@@ -59,8 +59,8 @@ export default function ServicesAndPricing() {
       id: 2,
       name: 'Bulk Order',
       type: 'Fixed Amount',
-      value: '$15.00',
-      description: 'Orders over $100',
+      value: 'Birr .00',
+      description: 'Orders over Birr ',
       validUntil: '2024-06-30',
       usage: 123,
       status: 'Active',
@@ -78,10 +78,10 @@ export default function ServicesAndPricing() {
   ];
 
   const pricingTiers = [
-    { name: 'Basic Wash', items: 'Up to 5kg', price: '$12.00' },
-    { name: 'Standard Wash', items: 'Up to 10kg', price: '$20.00' },
-    { name: 'Large Wash', items: 'Up to 15kg', price: '$28.00' },
-    { name: 'XL Wash', items: 'Over 15kg', price: '$35.00' },
+    { name: 'Basic Wash', items: 'Up to 5kg', price: 'Birr .00' },
+    { name: 'Standard Wash', items: 'Up to 10kg', price: 'Birr .00' },
+    { name: 'Large Wash', items: 'Up to 15kg', price: 'Birr .00' },
+    { name: 'XL Wash', items: 'Over 15kg', price: 'Birr .00' },
   ];
 
   return (

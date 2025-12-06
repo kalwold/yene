@@ -1,24 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Plus, Edit, Trash2, Tag, Package, Percent } from "lucide-react";
 import StatusBadge from "../../components/StatusBadge";
+import Loading from "../../components/Loading";
+import { apiClient } from "../../Services/ApiService";
 
 export default function ServicesAndPricing() {
   const [showModal, setShowModal] = useState(false);
   const [newServices, setNewServices] = useState({ name: "", description: "" });
   const [services, setServices] = useState([]);
   const [editingService, setEditingService] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("") ;
 
-  useEffect(() => {
-    const mockServices = [
-      {
-        id: 1,
-        name: "Wash & Fold",
-        description: "Basic washing and folding service",
-      },
-      { id: 2, name: "Dry Cleaning", description: "Professional dry cleaning" },
-      { id: 3, name: "Ironing", description: "Professional ironing service" },
-    ];
-    setServices(mockServices);
+  useEffect(() => { 
+const fetchServices = async () => {
+    try{
+        setLoading(true);
+    const response =  await apiClient.get(`/services`); 
+    setServices(response.data);
+    console.log("Fetched services:", response.data);
+    
+          }
+          catch(err){
+            console.error("Error fetching services:", err);
+            setError("Failed to load services. Please try again later.");
+          }finally{
+            setLoading(false);
+              }}
+      fetchServices();
   }, []);
 
   const handleAddService = () => {
@@ -112,6 +121,7 @@ export default function ServicesAndPricing() {
                   </p>
                 </div>
               ))}
+               {loading && <Loading />} 
             </div>
           </div>
         </div>

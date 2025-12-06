@@ -69,14 +69,18 @@ export default function Login() {
       console.log(userData);
 console.log(response.data.roles);
  
-  if (response.data.roles === 'laundryadmin' && response.data.newUser) {
+  if (response.data.roles === 'LAUNDRY_ADMIN' && response.data.newUser) {
         navigate('/laundryadmin/setup');
-      } else if (response.data.roles ==='System') {
+      } else if (response.data.roles === 'LAUNDRY_ADMIN' && !response.data.newUser) {
+        navigate('/laundryadmin/dashboard');
+      }
+      
+      else if (response.data.roles ==='SYSTEM_ADMIN') {
         navigate('/admin/dashboard');
       } else {
         navigate(`/${response.data.roles}/dashboard`);
       }
-      
+      // navigate('/laundryadmin/setup');
     } catch (error) {
       console.error("Login failed:", error);
 
@@ -126,6 +130,7 @@ console.log(response.data.roles);
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="true"
                 className={`w-full pl-10 pr-3 py-2 border-b border-gray-300 focus:border-blue-500 focus:outline-none transition-colors duration-3001 ${
                   error ? "border-red-500" : ""
                 }`}

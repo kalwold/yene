@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Trash2, Edit } from 'lucide-react';
+import { apiClient } from '../../Services/ApiService';
+import Loading from '../../components/Loading';
 
 
 
@@ -7,19 +9,28 @@ function Items() {
 
     const [showModal, setShowModal] = useState(false); 
     const [editingItem, setEditingItem] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("") ;
 ;
   const [items, setItems] = useState([]); 
   const [newItem, setNewItem] = useState({ name: "", description: "" });
 
     useEffect(() => { 
-    const mockItems = [
-      { id: 1, name: 'Trouser', description: 'Cloth item worn on the lower body', status: 'Active' },
-    { id: 2, name: 'Shirt', description: 'Cloth item worn on the upper body', status: 'Active' },
-    { id: 3, name: 'Jacket', description: 'Outerwear garment for warmth', status: 'Active' },
-    { id: 4, name: 'Socks', description: 'Cloth item worn on the feet', status: 'Active' },
-    { id: 5, name: 'Dress', description: 'One-piece garment for women', status: 'Active' },
-    { id: 6, name: 'Skirt', description: 'Cloth item worn on the lower body by women', status: 'Active' }, ];
-    setItems(mockItems);
+      const fetchItems = async () => {
+      try{
+    setLoading(true);
+const response =  await apiClient.get(`/items`); 
+setItems(response.data);
+console.log("Fetched items:", response.data);
+
+      }
+      catch(err){
+        console.error("Error fetching items:", err);
+        setError("Failed to load items. Please try again later.");
+      }finally{
+        setLoading(false);
+          }}
+      fetchItems();
   }, []);
 
   const resetForm = () => {
@@ -27,22 +38,31 @@ function Items() {
     setEditingItem(null);
     setShowModal(false);
   }
-  const handleAddItem = () => {
+  const handleAddItem = async () => {
 
     if (!newItem.name || !newItem.description) return;
+    try {
+      const response = await apiClient.post('/items', newItem);
+const itemToAdd = response.data;
 
-    const nextId = items.length + 1;
-
-    const itemToAdd = {
-      id: nextId,
-      name: newItem.name,
-      description: newItem.description,
-      status: "Active"
-    };
-
-    setItems([...items, itemToAdd]);
+   
     setNewItem({ name: "", description: "" });
     setShowModal(false); 
+    } catch (error) {
+      
+      if (
+        error.response &&
+        error.response.status !== 500 &&
+        error.response.data?.message
+      ) {
+        setError(error.response.data.message);
+      } else if (error.request && !error.response) {
+        setError("Network error. Please check your internet connection.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    }
+
   };
    const handleEdit = (item) => {
     setEditingItem(item);
@@ -95,6 +115,7 @@ function Items() {
               </tr>
             </thead>
             <tbody>
+
               {items.map((item) => (
                 <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50">
                   <td className="py-4 px-6">
@@ -134,6 +155,7 @@ function Items() {
                   </td>
                 </tr>
               ))}
+              {loading && <Loading />}
             </tbody>
           </table>
         </div>

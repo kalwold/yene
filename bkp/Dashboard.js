@@ -22,7 +22,7 @@ export default function Dashboard() {
     },
     {
       title: "Revenue (MTD)",
-      value: "$24,890",
+      value: "Birr 890",
       change: "+8.2%",
       icon: DollarSign,
       trend: "up",
@@ -47,10 +47,10 @@ export default function Dashboard() {
   ];
 
   const topServices = [
-    { name: "Wash & Fold", orders: 45, revenue: "$2,890" },
-    { name: "Dry Cleaning", orders: 32, revenue: "$4,120" },
-    { name: "Express Service", orders: 28, revenue: "$1,680" },
-    { name: "Premium Care", orders: 22, revenue: "$3,300" },
+    { name: "Wash & Fold", orders: 45, revenue: "Birr 890" },
+    { name: "Dry Cleaning", orders: 32, revenue: "Birr 120" },
+    { name: "Express Service", orders: 28, revenue: "Birr 680" },
+    { name: "Premium Care", orders: 22, revenue: "Birr 300" },
   ];
 
   const delayedOrders = [

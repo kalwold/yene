@@ -10,11 +10,28 @@ import {
 import KPICard from "../../components/KPICard";
 import StatusBadge from "../../components/StatusBadge";
 
-export default function Dashboard() {
+export default function LaundryAdminDashboard() {
   const kpiData = [
+
+     {
+      title: "Total Orders",
+      value: "127",
+      change: "+12.5%",
+      icon: Package,
+      trend: "up",
+      color: "blue",
+    },
+     {
+      title: "Pending Orders",
+      value: "20",
+      change: "+12.5%",
+      icon: Package,
+      trend: "up",
+      color: "blue",
+    },
     {
       title: "Orders Today",
-      value: "127",
+      value: "15",
       change: "+12.5%",
       icon: Package,
       trend: "up",
@@ -28,22 +45,7 @@ export default function Dashboard() {
       trend: "up",
       color: "green",
     },
-    {
-      title: "Active Laundries",
-      value: "18",
-      change: "+2",
-      icon: Building,
-      trend: "up",
-      color: "purple",
-    },
-    {
-      title: "Avg Rating",
-      value: "4.8",
-      change: "0%",
-      icon: Star,
-      trend: "neutral",
-      color: "orange",
-    },
+
   ];
 
   const topServices = [

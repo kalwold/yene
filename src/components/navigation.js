@@ -10,7 +10,7 @@ export const navigation = [
         label: 'Dashboard',
         path: '/admin/dashboard',
         icon:  <Home />,
-        permissions: ['VIEW_DASHBOARD']
+        role: 'SYSTEM_ADMIN'
     },
     {
         key: 'customers',
@@ -18,74 +18,68 @@ export const navigation = [
         path: '/admin/customers',
         
         icon: <User />,
+      
+        role: 'SYSTEM_ADMIN'
     },
     {
         key: 'laundry',
         label: 'Laundry Management',
           path: '/admin/laundry',
         icon:  <WashingMachine />,
+     
+        role: 'SYSTEM_ADMIN'
        
     },
     {
         key: 'orders',
         label: 'Order Management',
         path: '/admin/orders',
-        icon: <ListOrdered />
+        icon: <ListOrdered />,
+       
+        role: 'SYSTEM_ADMIN'
     },
-    // {
-    //     key: 'user',
-    //     label: 'User Management',
-    //     path: '/User',
-    //     icon: <FaUserCog />
-    // },
+
         {
         key: 'services',
         label: 'Services',
         path: '/admin/services',
-        icon:  <ServerIcon />
+        icon:  <ServerIcon />,
+        role: 'SYSTEM_ADMIN'
     },
             {
         key: 'items',
         label: 'Items',
         path: '/admin/items',
-        icon: <ShoppingBagIcon />
+        icon: <ShoppingBagIcon />,
+        role: 'SYSTEM_ADMIN'
     },
-    // {
-    //     key: 'settings',
-    //     label: 'Settings',
-    //     path: '/settings',
-    //     icon: <FaWhmcs />,
-    //     children: [
-  
-    //         {
-    //             key: 'branches',
-    //             label: 'Branches',
-    //             path: '/settings/branches',
-    //             icon: <FaLaptopHouse />,
-    //             permissions: ['GET_ALL_BRANCHES']
-    //         },
-    //         {
-    //             key: 'role',
-    //             label: 'Role',
-    //             path: '/settings/role',
-    //             icon: <FaUserCog />,
-    //             permissions: ['GET_ALL_LIVE_ROLES']
-    //         },
-    //         {
-    //             key: 'unauthorised-role',
-    //             label: 'Unauthorised Role',
-    //             path: '/settings/unauthorisedRole',
-    //             icon: <FaHourglassHalf/>,
-    //             permissions: ['GET_ALL_UNAUTHORIZED_ROLES']
-    //         }
-    //     ]
-    // },
-
+{
+        key: 'dashboard',
+        label: 'Dashboard',
+        path: '/laundryAdmin/dashboard',
+        icon:  <Home />,
+        role: 'LAUNDRY_ADMIN'
+    },
+    {
+        key: 'orders',
+        label: 'Order Management',
+        path: '/laundryAdmin/orders',
+        icon: <ListOrdered />,
+      role: 'LAUNDRY_ADMIN'
+    },
+        {
+        key: 'services',
+        label: 'Service & Pricing',
+        path: '/laundryAdmin/services',
+        icon: <ListOrdered />,
+      role: 'LAUNDRY_ADMIN'
+    },
      {
         key: 'logout',
         label: 'logout',
         path: '/logout',
-        icon: <PowerOff />
+        icon: <PowerOff />,
+        role: 'ALL'
        
     }
 ];

@@ -35,7 +35,7 @@ export default function LaundryManagement() {
         // rating: 4.8,
         // reviews: 142,
         status: "Pending",
-        // revenue: "$12,450",
+        // revenue: "Birr 450",
         // orders: 89,
       },
       {
@@ -47,7 +47,7 @@ export default function LaundryManagement() {
         rating: 4.6,
         reviews: 87,
         status: "Active",
-        revenue: "$8,920",
+        revenue: "Birr 920",
         orders: 65,
       },
       {
@@ -59,7 +59,7 @@ export default function LaundryManagement() {
         rating: 4.9,
         reviews: 203,
         status: "Active",
-        revenue: "$15,780",
+        revenue: "Birr 780",
         orders: 112,
       },
       {
@@ -72,7 +72,7 @@ export default function LaundryManagement() {
         rating: 4.2,
         reviews: 56,
         status: "Suspended",
-        revenue: "$3,200",
+        revenue: "Birr 200",
         orders: 23,
       },
     ];

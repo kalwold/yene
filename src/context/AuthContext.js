@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const [permissions, setPermissions]= useState([])
+  // const [permissions, setPermissions]= useState([])
   const [isLoading, setIsLoading] = useState(false); 
   const [passwordStatus, setPasswordStatus] = useState(null);
 
@@ -47,16 +47,16 @@ export const AuthProvider = ({ children }) => {
    //const storedUser = localStorage.getItem("user");
    const storedUser = sessionStorage.getItem("user");
     // const storedUser = user;
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        if (parsedUser.permissions) {
-          setPermissions(parsedUser.permissions.map((p) => p.permissionId));
-        }
-      } catch (error) {
-        console.error("Failed to parse user data:", error);
-      }
-    }
+    // if (storedUser) {
+    //   try {
+    //     const parsedUser = JSON.parse(storedUser);
+    //     if (parsedUser.permissions) {
+    //       setPermissions(parsedUser.permissions.map((p) => p.permissionId));
+    //     }
+    //   } catch (error) {
+    //     console.error("Failed to parse user data:", error);
+    //   }
+    // }
   }, []);
 
  
@@ -87,7 +87,7 @@ const checkPassword = async()=>{
       active: userData.active,
       passwordChanged: userData.passwordChanged,
       newUser: userData.newUser, 
-      permissions: userData.permissions
+      // permissions: userData.permissions
     };
 
     setMemoryTokens(token, refreshTkn); 
@@ -101,7 +101,7 @@ const checkPassword = async()=>{
 
     console.log("Token set: ", token, "Refresh token set: ", refreshTkn);
     setUser(formattedUser);
-  setPermissions(userData.permissions.map((p ) => p.permissionId));
+  // setPermissions(userData.permissions.map((p ) => p.permissionId));
 
 
    const status = await checkPassword();
@@ -113,7 +113,7 @@ const checkPassword = async()=>{
     setAuthToken(null);
     setRefreshToken(null)
     setUser(null);
-    setPermissions([]);
+    // setPermissions([]);
      sessionStorage.removeItem("authToken");
     sessionStorage.removeItem("refreshToken");
     sessionStorage.removeItem("user");
@@ -129,7 +129,7 @@ const checkPassword = async()=>{
 
 
   return (
-    <AuthContext.Provider value={{ authToken, user, login, logout, loading, permissions,passwordStatus,checkPassword }}>
+    <AuthContext.Provider value={{ authToken, user, login, logout, loading,passwordStatus,checkPassword }}>
       {children}
     </AuthContext.Provider>
   );

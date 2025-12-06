@@ -6,15 +6,12 @@ const Frame = () => {
       <div className="flex h-screen">
         {/* Sidebar */}
       <Sidebar />
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col">
-          {/* Header */}
-          {/* <div className="h-18">
-            <Header />
-          </div> */}
+
+        <div className="flex-1 flex flex-col sm:overflow-hidden sm:flex-row">
+      
           {/* Main Content */}
           <div className="flex-1 overflow-auto">
-            <Outlet/> {/* This will render the nested routes */}
+            <Outlet/>
           </div>
         </div>
       </div>

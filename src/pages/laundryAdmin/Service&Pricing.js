@@ -8,7 +8,10 @@ const apiService = {
   // Get all available services (from admin configuration)
   async getAvailableServices() {
     try {    
-        return   apiClient.get(`/services`);
+       const response = await apiClient.get(`/services`);
+       console.log('Fetched services', response.data);
+        return response;
+        
     } catch (error) {   
         console.error('Error fetching services:', error);
         throw error;
@@ -19,6 +22,7 @@ const apiService = {
   async getAvailableItems() {
 try {    
         return   apiClient.get(`/items`);
+
     } catch (error) {   
         console.error('Error fetching items:', error);
         throw error;
@@ -32,12 +36,12 @@ try {
       setTimeout(() => {
         resolve({
           data: [
-            { serviceId: '1', serviceName: 'Wash & Fold', itemId: '1', itemName: 'Shirt', price: 5.00 },
-            { serviceId: '1', serviceName: 'Wash & Fold', itemId: '2', itemName: 'Pants', price: 6.00 },
-            { serviceId: '1', serviceName: 'Wash & Fold', itemId: '3', itemName: 'Dress', price: 8.00 },
-            { serviceId: '2', serviceName: 'Dry Cleaning', itemId: '1', itemName: 'Shirt', price: 8.00 },
-            { serviceId: '2', serviceName: 'Dry Cleaning', itemId: '2', itemName: 'Pants', price: 10.00 },
-            { serviceId: '2', serviceName: 'Dry Cleaning', itemId: '3', itemName: 'Dress', price: 15.00 },
+            { serviceId: 'wash_fold', serviceName: 'Wash & Fold', itemId: '1', itemName: 'Shirt', price: 5.00 },
+            { serviceId: 'wash_fold', serviceName: 'Wash & Fold', itemId: '2', itemName: 'Pants', price: 6.00 },
+            { serviceId: 'wash_fold', serviceName: 'Wash & Fold', itemId: '3', itemName: 'Dress', price: 8.00 },
+            { serviceId: 'dry_clean', serviceName: 'Dry Cleaning', itemId: '1', itemName: 'Shirt', price: 8.00 },
+            { serviceId: 'dry_clean', serviceName: 'Dry Cleaning', itemId: '2', itemName: 'Pants', price: 10.00 },
+            { serviceId: 'dry_clean', serviceName: 'Dry Cleaning', itemId: '3', itemName: 'Dress', price: 15.00 },
           ]
         });
       }, 500);
@@ -143,6 +147,7 @@ const ServicesAndPricing = () => {
       // Extract configured services from pricing data
       const configuredServiceIds = [...new Set(pricingRes.data.map(item => item.serviceId))];
       setConfiguredServices(configuredServiceIds);
+      console.log('Configured Services:', configuredServiceIds);
     } catch (error) {
       console.error('Error fetching initial data:', error);
       // Show error toast or message here
@@ -617,13 +622,13 @@ const ServicesAndPricing = () => {
                 <select
                   value={selectedItem}
                   onChange={(e) => setSelectedItem(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
+                  className="w-full p-2 border border-gray-300 rounded-lg "
                   disabled={loading.addItem}
                 >
                   <option value="">Choose an item...</option>
                   {getAvailableItemsForService(showAddItemModal).map(item => (
                     <option key={item.id} value={item.id}>
-                      {item.name} ({item.category})
+                      {item.name}
                     </option>
                   ))}
                 </select>

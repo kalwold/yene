@@ -10,12 +10,26 @@ import {
   Trash2,
 } from "lucide-react";
 import StatusBadge from "../../components/StatusBadge";
+import { apiClient } from "../../Services/ApiService";
+import Loading from "../../components/Loading";
 
 export default function LaundryManagement() {
   const [laundries, setLaundries] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingLaundry, setEditingLaundry] = useState(null);
-    const [newLaundry, setNewLaundry] = useState({ name: "", location: "" , phone: "", email: ""});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("") ;
+    const [newLaundry, setNewLaundry] = useState({
+  id: "",
+  name: "",
+  taxId: "",
+  contactInfo: {
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+  },
+});
     const [searchTerm, setSearchTerm] = useState('');
       const [selectedFilters, setSelectedFilters] = useState({
     service: '',
@@ -25,62 +39,79 @@ export default function LaundryManagement() {
    
 
   useEffect(() => {
-    const laundries = [
-      {
-        id: 1,
-        name: "Clean Pro Laundry",
-        // services: ['Wash & Fold', 'Dry Cleaning', 'Ironing'],
-        location: "Downtown",
-        coordinates: "40.7128, -74.0060",
-        // rating: 4.8,
-        // reviews: 142,
-        status: "Pending",
-        // revenue: "Birr 450",
-        // orders: 89,
-      },
-      {
-        id: 2,
-        name: "Quick Wash Center",
-        services: ["Express Wash", "Dry Cleaning"],
-        location: "Uptown",
-        coordinates: "40.7589, -73.9851",
-        rating: 4.6,
-        reviews: 87,
-        status: "Active",
-        revenue: "Birr 920",
-        orders: 65,
-      },
-      {
-        id: 3,
-        name: "Elite Laundry Services",
-        services: ["Premium Care", "Dry Cleaning", "Alterations"],
-        location: "Midtown",
-        coordinates: "40.7505, -73.9934",
-        rating: 4.9,
-        reviews: 203,
-        status: "Active",
-        revenue: "Birr 780",
-        orders: 112,
-      },
-      {
-        id: 4,
-        name: "Budget Wash",
-        services: ["Wash & Fold"],
-        location: "Suburbs",
-        coordinates: "40.6892, -74.0445",
-        turnaroundTime: "24 hours",
-        rating: 4.2,
-        reviews: 56,
-        status: "Suspended",
-        revenue: "Birr 200",
-        orders: 23,
-      },
-    ];
-    setLaundries(laundries);
-  }, [laundries]);
+    // const laundries = [
+    //   {
+    //     id: 1,
+    //     name: "Clean Pro Laundry",
+    //     // services: ['Wash & Fold', 'Dry Cleaning', 'Ironing'],
+    //     location: "Downtown",
+    //     coordinates: "40.7128, -74.0060",
+    //     // rating: 4.8,
+    //     // reviews: 142,
+    //     status: "Pending",
+    //     // revenue: "Birr 450",
+    //     // orders: 89,
+    //   },
+    //   {
+    //     id: 2,
+    //     name: "Quick Wash Center",
+    //     services: ["Express Wash", "Dry Cleaning"],
+    //     location: "Uptown",
+    //     coordinates: "40.7589, -73.9851",
+    //     rating: 4.6,
+    //     reviews: 87,
+    //     status: "Active",
+    //     revenue: "Birr 920",
+    //     orders: 65,
+    //   },
+    //   {
+    //     id: 3,
+    //     name: "Elite Laundry Services",
+    //     services: ["Premium Care", "Dry Cleaning", "Alterations"],
+    //     location: "Midtown",
+    //     coordinates: "40.7505, -73.9934",
+    //     rating: 4.9,
+    //     reviews: 203,
+    //     status: "Active",
+    //     revenue: "Birr 780",
+    //     orders: 112,
+    //   },
+    //   {
+    //     id: 4,
+    //     name: "Budget Wash",
+    //     services: ["Wash & Fold"],
+    //     location: "Suburbs",
+    //     coordinates: "40.6892, -74.0445",
+    //     turnaroundTime: "24 hours",
+    //     rating: 4.2,
+    //     reviews: 56,
+    //     status: "Suspended",
+    //     revenue: "Birr 200",
+    //     orders: 23,
+    //   },
+    // ];
+    const fetchLaundries = async () => {
+        try{
+            setLoading(true);
+        const response =  await apiClient.get(`/companies`); 
+        setLaundries(response.data);
+        console.log("Fetched laundries:", response.data);
+        console.log("Fetched contactinfo:", response.data[0].contactInfo);
+  
+        
+              }
+              catch(err){
+                console.error("Error fetching services:", err);
+                setError("Failed to load services. Please try again later.");
+              }finally{
+                setLoading(false);
+                  }}
+          fetchLaundries();
+  
+  }, []);
  const handleAddLaundry = () => { 
        
-    if (!newLaundry.name || !newLaundry.location) return;
+    if (!newLaundry.name || !newLaundry.contactInfo?.address) return;
     const nextId = laundries.length + 1;
     const laundryToAdd = {
       id: nextId,
@@ -100,7 +131,7 @@ export default function LaundryManagement() {
 
 const handleEditLaundry = (laundry) => {
     setEditingLaundry(laundry);
-    setNewLaundry({ name: laundry.name, location: laundry.location });
+    setNewLaundry({ name: laundry.name, taxId: laundry.taxId, contactInfo: laundry.contactInfo });
     setShowModal(true);
   };
 
@@ -114,9 +145,11 @@ const handleEditLaundry = (laundry) => {
    
   const matchesStatus = selectedFilters.status === "" || 
     laundry.status?.toLowerCase() === selectedFilters.status.toLowerCase();
-  
+
   return matchesName && matchesService && matchesStatus; 
 });
+
+
 
   return (
     <>
@@ -260,12 +293,12 @@ const handleEditLaundry = (laundry) => {
                 <th className="text-left py-3 px-6 font-medium text-gray-600">
                   Location
                 </th>
-                <th className="text-left py-3 px-6 font-medium text-gray-600">
+                {/* <th className="text-left py-3 px-6 font-medium text-gray-600">
                   Rating
                 </th>
                 <th className="text-left py-3 px-6 font-medium text-gray-600">
                   Performance
-                </th>
+                </th> */}
                 <th className="text-left py-3 px-6 font-medium text-gray-600">
                   Status
                 </th>
@@ -275,6 +308,7 @@ const handleEditLaundry = (laundry) => {
               </tr>
             </thead>
             <tbody>
+              
               {filteredLaundries.map((laundry) => (
                 <tr
                   key={laundry.id}
@@ -306,7 +340,7 @@ const handleEditLaundry = (laundry) => {
                                   key={index}
                                   className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
                                 >
-                                  {service}
+                                  {service.name}
                                 </span>
                               ))}
                             {laundry.services.length > 2 && (
@@ -326,13 +360,13 @@ const handleEditLaundry = (laundry) => {
                   <td className="py-4 px-6">
                     <div className="flex items-center space-x-2">
                       <MapPin className="w-4 h-4 text-gray-400" />
-                      <span className="text-gray-900">{laundry.location}</span>
+                      <span className="text-gray-900">{laundry.contactInfo?.address}</span>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      {laundry.coordinates}
+                     {laundry.contactInfo?.email}
                     </p>
                   </td>
-                  <td className="py-4 px-6">
+                  {/* <td className="py-4 px-6">
                    { laundry.rating && <div className="flex items-center space-x-2">
                       <Star className="w-4 h-4 text-yellow-400 fill-current" />
                       <span className="font-medium text-gray-900">
@@ -342,15 +376,15 @@ const handleEditLaundry = (laundry) => {
                         ({laundry.reviews})
                       </span>
                     </div>}
-                  </td>
-                  <td className="py-4 px-6">
+                  </td> */}
+                  {/* <td className="py-4 px-6">
                   {laundry.revenue && <div>
                       <p className="font-medium text-green-600">
                         {laundry.revenue}
                       </p>
                       <p className="text-sm text-gray-500">This month</p>
                     </div>}
-                  </td>
+                  </td> */}
                   <td className="py-4 px-6">
                     <StatusBadge status={laundry.status} variant="small" />
                   </td>
@@ -382,93 +416,140 @@ const handleEditLaundry = (laundry) => {
                   </td>
                 </tr>
               ))}
+              {loading && <Loading />} 
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-     {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-full max-w-md p-6 shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">
-              {editingLaundry ? "Edit Laundry" : "Add New Laundry"}
-            </h2>
+    {showModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-xl w-full max-w-md p-6 shadow-lg">
+      <h2 className="text-xl font-semibold mb-4">
+        {editingLaundry ? "Edit Laundry" : "Add New Laundry"}
+      </h2>
 
-            {/* FORM */}
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-gray-700">
-                  Laundry Name
-                </label>
-                <input
-                  type="text"
-                  className="mt-1 w-full border rounded-lg px-3 py-2"
-                  value={newLaundry.name}
-                  onChange={(e) =>
-                    setNewLaundry({ ...newLaundry, name: e.target.value })
-                  }
-                />
-              </div>
- <div>
-                <label className="text-sm font-medium text-gray-700">
-                   Phone Number
-                </label>
-                <input
-                  type="tel"
-                  className="mt-1 w-full border rounded-lg px-3 py-2"
-                  value={newLaundry.phone}
-                  onChange={(e) =>
-                    setNewLaundry({ ...newLaundry, phone: e.target.value })
-                  }
-                />
-              </div>
-               <div>
-                <label className="text-sm font-medium text-gray-700">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  className="mt-1 w-full border rounded-lg px-3 py-2"
-                  value={newLaundry.email}
-                  onChange={(e) =>
-                    setNewLaundry({ ...newLaundry, email: e.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-gray-700">
-                  Location
-                </label>
-                <textarea
-                  className="mt-1 w-full border rounded-lg px-3 py-2"
-                  value={newLaundry.location}
-                  onChange={(e) =>
-                    setNewLaundry({ ...newLaundry, location: e.target.value })
-                  }
-                />
-              </div>
-            </div>
+      {/* FORM */}
+      <div className="space-y-4">
 
-            {/* BUTTONS */}
-            <div className="mt-6 flex justify-end space-x-3">
-              <button
-               onClick={handleCancel}
-                className="px-4 py-2 border rounded-lg text-gray-700"
-              >
-                Cancel
-              </button>
+      
 
-              <button
-                onClick={handleAddLaundry}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg"
-              >
-                { editingLaundry ? "Update Laundry" : "Add Laundry"}
-              </button>
-            </div>
-          </div>
+        {/* NAME */}
+        <div>
+          <label className="text-sm font-medium text-gray-700">Laundry Name</label>
+          <input
+            type="text"
+            className="mt-1 w-full border rounded-lg px-3 py-2"
+            value={newLaundry.name}
+            onChange={(e) =>
+              setNewLaundry({ ...newLaundry, name: e.target.value })
+            }
+          />
         </div>
-      )}
+
+        {/* TAX ID */}
+        <div>
+          <label className="text-sm font-medium text-gray-700">Tax ID</label>
+          <input
+            type="text"
+            className="mt-1 w-full border rounded-lg px-3 py-2"
+            value={newLaundry.taxId}
+            onChange={(e) =>
+              setNewLaundry({ ...newLaundry, taxId: e.target.value })
+            }
+          />
+        </div>
+
+        {/* CONTACT INFO SECTION */}
+        <h3 className="text-md font-semibold mt-4">Contact Information</h3>
+
+        {/* EMAIL */}
+        <div className="grid grid-cols-2 gap-2">
+        <div>
+          <label className="text-sm font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            className="mt-1 w-full border rounded-lg px-3 py-2"
+            value={newLaundry.contactInfo?.email}
+            onChange={(e) =>
+              setNewLaundry({
+                ...newLaundry,
+                contactInfo: { ...newLaundry.contactInfo, email: e.target.value }
+              })
+            }
+          />
+        </div>
+
+        {/* PHONE */}
+        <div>
+          <label className="text-sm font-medium text-gray-700">Phone</label>
+          <input
+            type="tel"
+            className="mt-1 w-full border rounded-lg px-3 py-2"
+            value={newLaundry.contactInfo?.phone}
+            onChange={(e) =>
+              setNewLaundry({
+                ...newLaundry,
+                contactInfo: { ...newLaundry.contactInfo, phone: e.target.value }
+              })
+            }
+          />
+        </div>
+
+        {/* ADDRESS */}
+        <div>
+          <label className="text-sm font-medium text-gray-700">Address</label>
+          <textarea
+            className="mt-1 w-full border rounded-lg px-3 py-2"
+            value={newLaundry.contactInfo?.address}
+            onChange={(e) =>
+              setNewLaundry({
+                ...newLaundry,
+                contactInfo: { ...newLaundry.contactInfo, address: e.target.value }
+              })
+            }
+          />
+        </div>
+
+        {/* CITY */}
+        <div>
+          <label className="text-sm font-medium text-gray-700">City</label>
+          <input
+            type="text"
+            className="mt-1 w-full border rounded-lg px-3 py-2"
+            value={newLaundry.contactInfo?.city}
+            onChange={(e) =>
+              setNewLaundry({
+                ...newLaundry,
+                contactInfo: { ...newLaundry.contactInfo, city: e.target.value }
+              })
+            }
+          />
+        </div>
+</div>
+      </div>
+
+      {/* BUTTONS */}
+      <div className="mt-6 flex justify-end space-x-3">
+        <button
+          onClick={handleCancel}
+          className="px-4 py-2 border rounded-lg text-gray-700"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={handleAddLaundry}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+        >
+          {editingLaundry ? "Update Laundry" : "Add Laundry"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </>
   );
 }

@@ -109,18 +109,24 @@ export default function LaundryManagement() {
           fetchLaundries();
   
   }, []);
- const handleAddLaundry = () => { 
+ const handleAddLaundry = async () => { 
        
     if (!newLaundry.name || !newLaundry.contactInfo?.address) return;
-    const nextId = laundries.length + 1;
-    const laundryToAdd = {
-      id: nextId,
-      name: newLaundry.name,
-      location: newLaundry.location,
-      status: "Active"  ,
-    };
-    setLaundries([...laundries, laundryToAdd]);
-    setNewLaundry({ name: "", location: "" });
+           try{
+            setLoading(true);
+        const response =  await apiClient.post(`/companies`, newLaundry); 
+        console.log("Added laundry:", response.data);
+        const laundryToAdd = response.data;
+
+              }
+              catch(err){
+                console.error("Error fetching services:", err);
+                setError("Failed to load services. Please try again later.");
+              }finally{
+                setLoading(false);
+                  }
+    //setLaundries([...laundries, laundryToAdd]);
+    setNewLaundry({ name: "", taxId: "", contactInfo: { email: "", phone: "", address: "", city: "" } });
     setShowModal(false); 
   };
    const handleCancel = () => {
@@ -197,7 +203,7 @@ const handleEditLaundry = (laundry) => {
               <p className="text-gray-600 text-sm font-medium">Active</p>
               <p className="text-2xl font-bold text-green-600">
                 {
-                  laundries.filter((laundry) => laundry.status === "Active")
+                  laundries.filter((laundry) => laundry.status === "ACTIVE")
                     .length
                 }
               </p>
@@ -295,10 +301,10 @@ const handleEditLaundry = (laundry) => {
                 </th>
                 {/* <th className="text-left py-3 px-6 font-medium text-gray-600">
                   Rating
-                </th>
+                </th>*/}
                 <th className="text-left py-3 px-6 font-medium text-gray-600">
-                  Performance
-                </th> */}
+                  Contact Info
+                </th> 
                 <th className="text-left py-3 px-6 font-medium text-gray-600">
                   Status
                 </th>
@@ -362,8 +368,15 @@ const handleEditLaundry = (laundry) => {
                       <MapPin className="w-4 h-4 text-gray-400" />
                       <span className="text-gray-900">{laundry.contactInfo?.address}</span>
                     </div>
+                  
+                  </td>
+                 <td className="py-4 px-6">
+                    
                     <p className="text-xs text-gray-500 mt-1">
                      {laundry.contactInfo?.email}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                     {laundry.contactInfo?.phone}
                     </p>
                   </td>
                   {/* <td className="py-4 px-6">
@@ -400,7 +413,7 @@ const handleEditLaundry = (laundry) => {
                       </button>
 
                       {laundry.status === "Pending" ? null : (
-                      laundry.status === "Active" ? (
+                      laundry.status === "ACTIVE" ? (
                         <button className="text-red-600 hover:text-red-800 text-sm font-medium">
                           Suspend
                         </button>

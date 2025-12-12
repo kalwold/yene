@@ -12,6 +12,7 @@ import {
 import StatusBadge from "../../components/StatusBadge";
 import { apiClient } from "../../Services/ApiService";
 import Loading from "../../components/Loading";
+import { Confirmation } from "../../components/Confirmation";
 
 export default function LaundryManagement() {
   const [laundries, setLaundries] = useState([]);
@@ -19,6 +20,7 @@ export default function LaundryManagement() {
   const [editingLaundry, setEditingLaundry] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("") ;
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const [newLaundry, setNewLaundry] = useState({
   id: "",
   name: "",
@@ -39,57 +41,7 @@ export default function LaundryManagement() {
    
 
   useEffect(() => {
-    // const laundries = [
-    //   {
-    //     id: 1,
-    //     name: "Clean Pro Laundry",
-    //     // services: ['Wash & Fold', 'Dry Cleaning', 'Ironing'],
-    //     location: "Downtown",
-    //     coordinates: "40.7128, -74.0060",
-    //     // rating: 4.8,
-    //     // reviews: 142,
-    //     status: "Pending",
-    //     // revenue: "Birr 450",
-    //     // orders: 89,
-    //   },
-    //   {
-    //     id: 2,
-    //     name: "Quick Wash Center",
-    //     services: ["Express Wash", "Dry Cleaning"],
-    //     location: "Uptown",
-    //     coordinates: "40.7589, -73.9851",
-    //     rating: 4.6,
-    //     reviews: 87,
-    //     status: "Active",
-    //     revenue: "Birr 920",
-    //     orders: 65,
-    //   },
-    //   {
-    //     id: 3,
-    //     name: "Elite Laundry Services",
-    //     services: ["Premium Care", "Dry Cleaning", "Alterations"],
-    //     location: "Midtown",
-    //     coordinates: "40.7505, -73.9934",
-    //     rating: 4.9,
-    //     reviews: 203,
-    //     status: "Active",
-    //     revenue: "Birr 780",
-    //     orders: 112,
-    //   },
-    //   {
-    //     id: 4,
-    //     name: "Budget Wash",
-    //     services: ["Wash & Fold"],
-    //     location: "Suburbs",
-    //     coordinates: "40.6892, -74.0445",
-    //     turnaroundTime: "24 hours",
-    //     rating: 4.2,
-    //     reviews: 56,
-    //     status: "Suspended",
-    //     revenue: "Birr 200",
-    //     orders: 23,
-    //   },
-    // ];
+    
     const fetchLaundries = async () => {
         try{
             setLoading(true);
@@ -141,12 +93,44 @@ const handleEditLaundry = (laundry) => {
     setShowModal(true);
   };
 
+  const handleUpdateLaundry = async () => {
+    if (!newLaundry.name || !newLaundry.contactInfo?.address) return; 
+    try {
+      setLoading(true);
+      const response = await apiClient.put(`/companies/${editingLaundry.id}`, newLaundry);
+      console.log("Updated laundry:", response.data);
+      const updatedLaundry = response.data;
+      setLaundries(laundries.map(laundry => laundry.id === editingLaundry.id ? updatedLaundry : laundry));
+    } catch (error) {
+      console.error("Error updating laundry:", error);
+    } finally {
+      setLoading(false);
+      setNewLaundry({ name: "", taxId: "", contactInfo: { email: "", phone: "", address: "", city: "" } });
+      setEditingLaundry(null);
+      setShowModal(false);
+    }
+  };
+
+  const handleDeleteLaundry = async (laundryId) => {
+    try {
+      setLoading(true);
+      await apiClient.delete(`/companies/delete/${laundryId}`);
+      setLaundries(laundries.filter(laundry => laundry.id !== laundryId));
+    } catch (error) {
+      console.error("Error deleting laundry:", error);
+    } finally {
+      setLoading(false);
+    }
+    setShowConfirmDelete(false);
+    
+  };
+
  const filteredLaundries = laundries.filter(laundry => {
      const matchesName = laundry.name.toLowerCase().includes(searchTerm.toLowerCase()) 
       const matchesService =
     selectedFilters.service  === "" ||
     (laundry.services && laundry.services.some(s =>
-      s.toLowerCase().includes(selectedFilters.service.toLowerCase())
+      s.name.toLowerCase().includes(selectedFilters.service.toLowerCase())
     ));
    
   const matchesStatus = selectedFilters.status === "" || 
@@ -407,10 +391,15 @@ const handleEditLaundry = (laundry) => {
                       className="text-blue-600 hover:text-blue-800 p-1">
                         <Edit className="w-4 h-4" />
                       </button>
-                      <button className="text-blue-600 hover:text-blue-800 p-1">
+                      {/* <button className="text-blue-600 hover:text-blue-800 p-1"
+                      
+                      onClick={() =>{ setShowConfirmDelete(true)
+                        setEditingLaundry(laundry);}
+                      }
+                      >
                        
                         <Trash2 className="w-4 h-4" />
-                      </button>
+                      </button> */}
 
                       {laundry.status === "Pending" ? null : (
                       laundry.status === "ACTIVE" ? (
@@ -422,9 +411,7 @@ const handleEditLaundry = (laundry) => {
                           Activate
                         </button>
                       ))}
-                      {/* <button className="text-gray-400 hover:text-gray-600 p-1">
-                        <MoreHorizontal className="w-4 h-4" />
-                      </button> */}
+                  
                     </div>
                   </td>
                 </tr>
@@ -553,7 +540,7 @@ const handleEditLaundry = (laundry) => {
         </button>
 
         <button
-          onClick={handleAddLaundry}
+          onClick= {editingLaundry ? handleUpdateLaundry : handleAddLaundry}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg"
         >
           {editingLaundry ? "Update Laundry" : "Add Laundry"}
@@ -563,6 +550,12 @@ const handleEditLaundry = (laundry) => {
   </div>
 )}
 
+
+
+{showConfirmDelete && <Confirmation title = "Confirm Delete" message ="Are you sure you want to delete this laundry?"   onConfirm={() => handleDeleteLaundry(editingLaundry.id)}
+onCancel={() => setShowConfirmDelete(false)} /> }
     </>
+  
+   
   );
 }

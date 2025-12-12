@@ -24,6 +24,7 @@ import AuthContext from "./context/AuthContext";
 import LaundryAdminSetup from "./pages/laundryAdmin/setup";
 import LaundryAdminDashboard from "./pages/laundryAdmin/Dashboard";
 import OrderManagementLaundryAdmin from "./pages/laundryAdmin/OrderManagement";
+import UserManagement from "./pages/systemAdmin/UserManagement";
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
         <Route path="/admin/laundry" element={user?.role === 'SYSTEM_ADMIN'?<LaundryManagement />: <Navigate to ="/login" />} />
         <Route path="/admin/services" element={user?.role === 'SYSTEM_ADMIN'?<ServicesManagement />: <Navigate to ="/login" />} />
         <Route path="/admin/items" element={user?.role === 'SYSTEM_ADMIN'?<Items />: <Navigate to ="/login" />} />
+        <Route path="/admin/users" element={user?.role === 'SYSTEM_ADMIN'? <UserManagement /> : <Navigate to ="/login" />} />
 
 
 
